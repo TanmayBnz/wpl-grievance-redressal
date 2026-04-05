@@ -1,0 +1,203 @@
+{% extends "GRsystem/index.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body { background-color: #f4f6f8; }
+
+    #layout-wrapper {
+        display: flex;
+        min-height: calc(100vh - 112px);
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+        width: 230px;
+        min-width: 230px;
+        background-color: #1e2d3d;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-brand {
+        padding: 18px 20px 10px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: #5d7a8a;
+    }
+    .sidebar-user {
+        padding: 10px 20px 14px;
+        border-bottom: 1px solid #263849;
+        margin-bottom: 6px;
+    }
+    .sidebar-user .name {
+        color: #ecf0f1;
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .sidebar-user .role {
+        color: #7f96a5;
+        font-size: 0.75rem;
+        margin-top: 2px;
+    }
+    .sidebar-nav a {
+        display: block;
+        padding: 9px 20px;
+        color: #8faab8;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+        border-left: 3px solid transparent;
+    }
+    .sidebar-nav a:hover {
+        background-color: #263849;
+        color: #ecf0f1;
+        border-left-color: #4a90d9;
+    }
+    .sidebar-nav a.active {
+        background-color: #263849;
+        color: #ffffff;
+        border-left-color: #4a90d9;
+        font-weight: 600;
+    }
+    .sidebar-divider {
+        border-top: 1px solid #263849;
+        margin: 8px 0;
+    }
+
+    /* ── Content area ── */
+    #main-content {
+        flex: 1;
+        padding: 28px 32px;
+        min-width: 0;
+        background-color: #f4f6f8;
+    }
+    .page-header {
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .page-header h4 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e2d3d;
+    }
+    .page-header p {
+        margin: 4px 0 0;
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    /* ── Cards ── */
+    .card {
+        border: none;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        border-radius: 6px;
+    }
+
+    /* ── Tables ── */
+    .table th {
+        background-color: #f1f3f5;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #4a5568;
+        border-top: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+    }
+    .table td {
+        vertical-align: middle;
+        font-size: 0.88rem;
+        color: #343a40;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* ── Status badges ── */
+    .badge-status-1 { background-color: #27ae60; color: #fff; }
+    .badge-status-2 { background-color: #e67e22; color: #fff; }
+    .badge-status-3 { background-color: #c0392b; color: #fff; }
+
+    /* ── Complaint ID ── */
+    .complaint-id {
+        font-family: monospace;
+        font-size: 0.82rem;
+        color: #5d6d7e;
+        font-weight: 600;
+    }
+
+    /* ── Alerts ── */
+    .alert { border-radius: 5px; font-size: 0.9rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="layout-wrapper">
+    <div id="sidebar">
+        <div class="sidebar-brand">GRS Portal</div>
+        {% if user.is_authenticated %}
+        <div class="sidebar-user">
+            <div class="name">{{ user.get_full_name|default:user.username }}</div>
+            <div class="role">{{ user.profile.get_type_user_display }}</div>
+        </div>
+        <nav class="sidebar-nav">
+            {% if user.profile.type_user == 'grievance' %}
+                <a href="{% url 'counter' %}" class="{% if request.resolver_match.url_name == 'counter' %}active{% endif %}">
+                    Statistics
+                </a>
+                <a href="{% url 'allcomplaints' %}" class="{% if request.resolver_match.url_name == 'allcomplaints' %}active{% endif %}">
+                    All Complaints
+                </a>
+                <a href="{% url 'solved' %}" class="{% if request.resolver_match.url_name == 'solved' %}active{% endif %}">
+                    Resolved Complaints
+                </a>
+                <div class="sidebar-divider"></div>
+                <a href="{% url 'change_password_g' %}" class="{% if request.resolver_match.url_name == 'change_password_g' %}active{% endif %}">
+                    Change Password
+                </a>
+            {% else %}
+                <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    My Profile
+                </a>
+                <a href="{% url 'complaints' %}" class="{% if request.resolver_match.url_name == 'complaints' %}active{% endif %}">
+                    Submit Complaint
+                </a>
+                <a href="{% url 'list' %}" class="{% if request.resolver_match.url_name == 'list' %}active{% endif %}">
+                    Pending / In-Progress
+                </a>
+                <a href="{% url 'slist' %}" class="{% if request.resolver_match.url_name == 'slist' %}active{% endif %}">
+                    Resolved Complaints
+                </a>
+                <div class="sidebar-divider"></div>
+                <a href="{% url 'change_password' %}" class="{% if request.resolver_match.url_name == 'change_password' %}active{% endif %}">
+                    Change Password
+                </a>
+            {% endif %}
+            <div class="sidebar-divider"></div>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+        {% endif %}
+    </div>
+
+    <div id="main-content">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% block page_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

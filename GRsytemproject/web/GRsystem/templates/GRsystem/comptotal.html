@@ -1,0 +1,38 @@
+{% extends "GRsystem/base_sidebar.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Submit Complaint — GRS{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>Submit a Complaint</h4>
+    <p>Provide a clear subject and description. You will receive an email confirmation with your complaint ID.</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ complaint_form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-2">Submit complaint</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 mt-3 mt-lg-0">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="font-weight-bold mb-2" style="color:#1e2d3d; font-size:0.9rem;">Guidelines</h6>
+                <ul class="pl-3 mb-0" style="font-size:0.85rem; color:#6c757d; line-height:1.9;">
+                    <li>Select the category that best describes your issue.</li>
+                    <li>Specify the department if your complaint is department-specific.</li>
+                    <li>Provide a concise subject and a detailed description.</li>
+                    <li>You will receive an email confirming receipt.</li>
+                    <li>Track progress under <em>Pending / In-Progress</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

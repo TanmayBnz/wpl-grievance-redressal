@@ -1,0 +1,13 @@
+{% autoescape off %}
+Hi {{ user.get_full_name|default:user.username }},
+
+Thank you for registering with the Grievance Redressal System.
+
+Please click the link below to activate your account:
+
+{{ activation_link }}
+
+This link is valid for 24 hours. If you did not register, you can safely ignore this email.
+
+— Grievance Redressal System
+{% endautoescape %}

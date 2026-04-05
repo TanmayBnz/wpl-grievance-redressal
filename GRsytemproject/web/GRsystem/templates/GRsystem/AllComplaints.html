@@ -1,0 +1,101 @@
+{% extends "GRsystem/base_sidebar.html" %}
+{% load crispy_forms_tags %}
+{% block title %}All Complaints — GRS{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>All Pending &amp; In-Progress Complaints</h4>
+    <p>Review, update status, and add remarks for each complaint.</p>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form method="GET" class="form-inline flex-wrap" style="gap:8px;">
+            <input class="form-control form-control-sm" type="search" name="search"
+                   placeholder="Search subject, description, user…" value="{{ search }}"
+                   style="min-width:220px;">
+            <select class="form-control form-control-sm" name="category" style="min-width:160px;">
+                <option value="">All categories</option>
+                {% for val, label in categories %}
+                <option value="{{ val }}" {% if category == val %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Filter</button>
+            {% if search or category %}
+            <a href="{% url 'allcomplaints' %}" class="btn btn-link btn-sm text-muted">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% if complaints %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Submitted by</th>
+                    <th>Subject</th>
+                    <th>Category</th>
+                    <th>Dept.</th>
+                    <th>Filed</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in complaints %}
+                <tr>
+                    <td class="complaint-id">{{ c.complaint_id }}</td>
+                    <td style="font-size:0.85rem;">
+                        {{ c.user.get_full_name|default:c.user.username }}<br>
+                        <span class="text-muted" style="font-size:0.78rem;">{{ c.user.email }}</span>
+                    </td>
+                    <td>{{ c.Subject }}</td>
+                    <td>{{ c.get_Type_of_complaint_display }}</td>
+                    <td>{{ c.get_department_display|default:"—" }}</td>
+                    <td>{{ c.Time|date:"d M Y" }}</td>
+                    <td>
+                        <span class="badge badge-status-{{ c.status }} px-2 py-1" style="font-size:0.78rem;">
+                            {{ c.get_status_display }}
+                        </span>
+                    </td>
+                    <td style="min-width:260px;">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="cid" value="{{ c.id }}">
+                            <select name="status" class="form-control form-control-sm mb-1">
+                                <option value="3" {% if c.status == 3 %}selected{% endif %}>Pending</option>
+                                <option value="2" {% if c.status == 2 %}selected{% endif %}>In Progress</option>
+                                <option value="1" {% if c.status == 1 %}selected{% endif %}>Resolved</option>
+                            </select>
+                            <textarea name="remarks" rows="2" class="form-control form-control-sm mb-1"
+                                placeholder="Remarks (optional)"></textarea>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'pdf_viewer' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="cid" value="{{ c.id }}">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">PDF</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <p class="text-muted" style="font-size:0.95rem;">
+            {% if search or category %}No complaints match your filters.{% else %}No pending complaints at the moment.{% endif %}
+        </p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

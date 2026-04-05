@@ -1,0 +1,60 @@
+{% extends "GRsystem/base_sidebar.html" %}
+{% block title %}Resolved Complaints — GRS{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>Resolved Complaints</h4>
+    <p>Complaints that have been marked as resolved by the grievance cell.</p>
+</div>
+
+{% if complaints %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Category</th>
+                    <th>Department</th>
+                    <th>Filed</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for complaint in complaints %}
+                <tr>
+                    <td class="complaint-id">{{ complaint.complaint_id }}</td>
+                    <td>{{ complaint.Subject }}</td>
+                    <td>{{ complaint.get_Type_of_complaint_display }}</td>
+                    <td>{{ complaint.get_department_display|default:"—" }}</td>
+                    <td>{{ complaint.Time|date:"d M Y" }}</td>
+                    <td>
+                        <span class="badge badge-status-1 px-2 py-1" style="font-size:0.78rem;">Resolved</span>
+                    </td>
+                    <td style="max-width:200px; font-size:0.82rem; color:#6c757d;">
+                        {{ complaint.remarks|default:"—"|truncatechars:80 }}
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'pdf_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="cid" value="{{ complaint.id }}">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">PDF</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <p class="text-muted" style="font-size:0.95rem;">No resolved complaints yet.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

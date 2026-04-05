@@ -1,0 +1,48 @@
+{% extends "GRsystem/base_sidebar.html" %}
+{% load crispy_forms_tags %}
+{% block title %}My Profile — GRS{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>My Profile</h4>
+    <p>Update your personal and contact information below.</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h6 class="font-weight-bold mb-3" style="color:#1e2d3d; font-size:0.9rem;">Account</h6>
+                    {{ p_form|crispy }}
+                    <h6 class="font-weight-bold mt-4 mb-3" style="color:#1e2d3d; font-size:0.9rem;">Institute Details</h6>
+                    {{ profile_form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 mt-3 mt-lg-0">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="font-weight-bold mb-3" style="color:#1e2d3d; font-size:0.9rem;">Account Summary</h6>
+                <dl class="row mb-0" style="font-size:0.88rem;">
+                    <dt class="col-5 text-muted font-weight-normal">Username</dt>
+                    <dd class="col-7">{{ user.username }}</dd>
+                    <dt class="col-5 text-muted font-weight-normal">Email</dt>
+                    <dd class="col-7">{{ user.email }}</dd>
+                    <dt class="col-5 text-muted font-weight-normal">Role</dt>
+                    <dd class="col-7">{{ user.profile.get_type_user_display }}</dd>
+                    <dt class="col-5 text-muted font-weight-normal">College</dt>
+                    <dd class="col-7">{{ user.profile.get_collegename_display }}</dd>
+                    <dt class="col-5 text-muted font-weight-normal">Branch</dt>
+                    <dd class="col-7">{{ user.profile.get_Branch_display }}</dd>
+                    <dt class="col-5 text-muted font-weight-normal">Member since</dt>
+                    <dd class="col-7">{{ user.date_joined|date:"d M Y" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

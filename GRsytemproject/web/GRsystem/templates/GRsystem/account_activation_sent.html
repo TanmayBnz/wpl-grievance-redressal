@@ -1,0 +1,19 @@
+{% extends "GRsystem/index.html" %}
+{% block title %}Check Your Email — GRS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:480px; padding-top:64px; padding-bottom:64px; text-align:center;">
+    <div class="card p-5">
+        <div style="font-size:2.5rem; margin-bottom:16px;">&#9993;</div>
+        <h5 class="font-weight-bold mb-2" style="color:#1e2d3d;">Confirm your email</h5>
+        <p class="text-muted" style="font-size:0.9rem;">
+            An activation link has been sent to <strong>{{ email }}</strong>.
+            Please check your inbox and click the link to activate your account.
+        </p>
+        <p class="text-muted" style="font-size:0.82rem;">
+            If you are running in development mode, the link is printed to the server console.
+        </p>
+        <a href="{% url 'signin' %}" class="btn btn-outline-primary btn-sm mt-3">Back to Login</a>
+    </div>
+</div>
+{% endblock %}

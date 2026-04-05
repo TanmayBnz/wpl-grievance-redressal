@@ -1,0 +1,12 @@
+{% extends "GRsystem/index.html" %}
+{% block title %}Logged Out — GRS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:420px; padding-top:64px; padding-bottom:64px; text-align:center;">
+    <div class="card p-5">
+        <h5 class="font-weight-bold mb-2" style="color:#1e2d3d;">You have been logged out</h5>
+        <p class="text-muted mb-4" style="font-size:0.9rem;">Thank you for using the Grievance Redressal System.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Log in again</a>
+    </div>
+</div>
+{% endblock %}
