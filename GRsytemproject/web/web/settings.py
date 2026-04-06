@@ -146,6 +146,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_USER = ''   # add sender address
 # EMAIL_HOST_PASSWORD = ''  # add app password
 DEFAULT_FROM_EMAIL = 'noreply@grs.local'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
